@@ -103,44 +103,87 @@ rel="stylesheet">
 <!-- End of Topbar -->
 
 <!-- Begin Page Content -->
-<div class="container-fluid">
+<!-- Begin Page Content -->
+<div class="container-fluid px-4 py-4">
 
-<!-- Page Heading -->
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-<h1 class="h3 mb-0 text-gray-800">Add To Cart</h1>
+    <!-- Page Heading -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 text-primary fw-bold mb-0">
+            <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+        </h1>
+        <a href="viewCart.php" class="btn btn-success shadow-sm">
+            <i class="fas fa-eye me-1"></i> View Cart
+        </a>
+    </div>
+
+    <!-- Feedback Message -->
+    <?php if (!empty($message)) echo $message; ?>
+
+    <!-- Card for Form -->
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4">
+            <form action="" method="post" class="needs-validation" novalidate>
+
+                <!-- Product Selection -->
+                <div class="mb-4">
+                    <label for="product" class="form-label fw-semibold">
+                        <i class="fas fa-box me-1"></i>Product
+                    </label>
+                    <select id="product" name="product" class="form-select" required>
+                        <option value="">Select Product</option>
+                        <?php
+                        $query = $conn->prepare("SELECT * FROM product");
+                        $query->execute();
+                        $result = $query->get_result();
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<option value='" . htmlspecialchars($row['product_id']) . "'>" . htmlspecialchars($row['product_name']) . "</option>";
+                        }
+                        ?>
+                    </select>
+                    <div class="invalid-feedback">Please select a product.</div>
+                </div>
+
+                <!-- Quantity Input -->
+                <div class="mb-4">
+                    <label for="quantity" class="form-label fw-semibold">
+                        <i class="fas fa-sort-numeric-up me-1"></i>Quantity
+                    </label>
+                    <input type="number" id="quantity" name="quantity" min="1" class="form-control" placeholder="Enter quantity" required>
+                    <div class="invalid-feedback">Please enter a valid quantity.</div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex gap-3">
+                    <button class="btn btn-primary px-4 shadow-sm" name="add_to_cart">
+                        <i class="fas fa-plus-circle me-1"></i>Add to Cart
+                    </button>
+                    <a href="dashboard.php" class="btn btn-outline-secondary px-4">
+                        <i class="fas fa-arrow-left me-1"></i>Back
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
 </div>
-<form action="" method="post">
-    <div class="my-3">
-        <label class="form-label">Product</label>
-        <select name="product" class="form-control" required>
-            <option value="">Select Product</option>
-            <?php
-            $query = $conn->prepare("SELECT * FROM product");
-            $query->execute();
-            $result = $query->get_result();
-            while ($row = $result->fetch_assoc()) {
-                echo "<option value='" . htmlspecialchars($row['product_id']) . "'>" . htmlspecialchars($row['product_name']) . "</option>";
+
+<!-- Bootstrap 5 Form Validation -->
+<script>
+(() => {
+    'use strict';
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
             }
-            ?>
-        </select>
-    </div>
+            form.classList.add('was-validated');
+        }, false);
+    });
+})();
+</script>
 
-    <div class="my-3">
-        <label class="form-label">Quantity</label>
-        <input type="number" name="quantity" class="form-control" required>
-    </div>
-
-    <button class="btn btn-primary" name="add_to_cart">Add to cart</button>
-    <a href="viewCart.php" class="btn btn-success">View Cart</a>
-</form>
-
-<!-- Alert message -->
-<?php if (!empty($message)) {
-    echo $message;
-} ?>
-
-
-</div>
 </div>
 
 

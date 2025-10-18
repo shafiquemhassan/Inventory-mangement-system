@@ -72,6 +72,8 @@ if (isset($_POST['addInventory'])) {
     <!-- Custom styles for this page -->
     <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
+    
+
 </head>
 
 <body id="page-top">
@@ -103,117 +105,114 @@ if (isset($_POST['addInventory'])) {
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
-
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Inventory</h1>
-                    </div>
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-  Add
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Inventory</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-primary fw-bold">
+            <i class="fas fa-boxes me-2"></i>Inventory Management
+        </h1>
+        <button class="btn btn-primary shadow-sm" data-toggle="modal" data-target="#addInventoryModal">
+            <i class="fas fa-plus me-1"></i> Add Inventory
         </button>
-      </div>
-      <div class="modal-body">
-        <form action="" method="post">
-            <div class="my-3">
-            <label for="product" class="form-label">Product Name</label>
-            <select name="product" id="product" class="form-control">
-                <option value="">Select Product</option>
-                <?php
-                $query = $conn->prepare("SELECT * FROM product");
-                $query->execute();
-                $result = $query->get_result();
-
-                while ($row = $result->fetch_assoc()) {
-                    ?>
-                    <option value="<?php echo htmlspecialchars($row['product_id']); ?>">
-                        <?php echo htmlspecialchars($row['product_name']); ?>
-                    </option>
-                <?php } ?>
-            </select>
-
-            </div>
-
-
-            <div class="my-3">
-                <label for="quantity" class="form-label">Quantity</label>
-                <input type="number" class="form-control" name="quantity">
-            </div>
-
-            <div class="d-flex justify-content-center">
-                <button class="btn btn-primary" name="addInventory">Add</button>
-            </div>
-        </form>
-      </div>
     </div>
-  </div>
+
+    <!-- Inventory Table -->
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="dataTable">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>#</th>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Last Updated</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $query = "SELECT i.inventory_id, p.product_name, i.quantity, i.last_updated
+                                  FROM inventory i
+                                  JOIN product p ON i.product_id = p.product_id
+                                  ORDER BY i.last_updated DESC";
+                        $result = $conn->query($query);
+                        if ($result->num_rows > 0):
+                            $count = 1;
+                            while ($row = $result->fetch_assoc()):
+                        ?>
+                        <tr>
+                            <td><?= $count++; ?></td>
+                            <td><?= htmlspecialchars($row['product_name']); ?></td>
+                            <td><span class="badge bg-info text-dark px-3"><?= $row['quantity']; ?></span></td>
+                            <td><?= date('d M Y, h:i A', strtotime($row['last_updated'])); ?></td>
+                            <td class="text-center">
+                                <a href="deleteInventory.php?id=<?= $row['inventory_id']; ?>" 
+                                   class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Delete this inventory item?')">
+                                   <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <?php endwhile; else: ?>
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">No inventory records found.</td>
+                        </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
-                    <!-- table -->
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>id</th>
-                                            <th>Product Name</th>
-                                            <th>Quantity</th>
-                                            <th>CREATED_At</th>
-                                            <th>Del</th>
-                                        </tr>
-                                    </thead>
-                                   <tbody>
-                                    <?php
-$query = <<<SQL
-SELECT 
-    i.inventory_id,
-    p.product_name,
-    i.quantity,
-    i.last_updated
-FROM inventory i
-JOIN product p ON i.product_id = p.product_id
-ORDER BY i.last_updated DESC
-SQL;
 
-$result = $conn->query($query);
+<!-- Add Inventory Modal -->
+<div class="modal fade" id="addInventoryModal" tabindex="-1" aria-labelledby="addInventoryLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="addInventoryLabel">
+                    <i class="fas fa-plus-circle me-1"></i> Add Inventory
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form method="post">
+                <div class="modal-body px-4 py-3">
+                    <div class="mb-3">
+                        <label for="product" class="form-label fw-semibold">Select Product</label>
+                        <select name="product" id="product" class="form-control rounded-3" required>
+                            <option value="">Select Product</option>
+                            <?php
+                            $query = $conn->prepare("SELECT * FROM product ORDER BY product_name ASC");
+                            $query->execute();
+                            $result = $query->get_result();
+                            while ($row = $result->fetch_assoc()):
+                            ?>
+                            <option value="<?= htmlspecialchars($row['product_id']); ?>">
+                                <?= htmlspecialchars($row['product_name']); ?>
+                            </option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
 
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        ?>
-        <tr>
-            <td><?php echo $row['inventory_id']; ?></td>
-            <td><?php echo htmlspecialchars($row['product_name']); ?></td>
-            <td><?php echo $row['quantity']; ?></td>
-            <td><?php echo $row['last_updated']; ?></td>
-            <td>
-                <a href="deleteInventory.php?id=<?php echo $row['inventory_id']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this inventory item?')">Del</a>
-            </td>
-        </tr>
-        <?php
-    }
-} else {
-    echo '<tr><td colspan="6" class="text-center">No inventory records found.</td></tr>';
-}
-?>
-
-                                  </tbody>
-                                </table>
-                            </div>
-
-                        </div>
-
-                    
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label fw-semibold">Quantity</label>
+                        <input type="number" name="quantity" class="form-control rounded-3" min="1" required>
+                    </div>
                 </div>
+                <div class="modal-footer">
+                    <button type="submit" name="addInventory" class="btn btn-primary">
+                        <i class="fas fa-check me-1"></i> Save
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
             </div>
            
 

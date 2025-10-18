@@ -1,25 +1,25 @@
 <?php
-include 'conn.php'; // DB connection
+include 'conn.php';
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
-    // Optionally validate the ID
-    if (is_numeric($id)) {
-        $stmt = $conn->prepare("DELETE FROM product WHERE product_id = ?");
-        $stmt->bind_param("i", $id);
+    // Check if this product is used in inventory
+    $check = $conn->prepare("SELECT COUNT(*) FROM inventory WHERE product_id = ?");
+    $check->bind_param("i", $id);
+    $check->execute();
+    $check->bind_result($count);
+    $check->fetch();
+    $check->close();
 
-        if ($stmt->execute()) {
-            echo "<script>alert('Product deleted successfully'); window.location.href = 'product.php ';</script>";
-        } else {
-            echo "<script>alert('Error deleting product'); window.history.back();</script>";
-        }
-
-        $stmt->close();
-    } else {
-        echo "<script>alert('Invalid ID'); window.history.back();</script>";
+    if ($count > 0) {
+        echo "<script>alert('Cannot delete: This product is used in inventory!'); window.location.href='product.php';</script>";
+        exit;
     }
-} else {
-    echo "<script>alert('No ID provided'); window.history.back();</script>";
+
+    $stmt = $conn->prepare("DELETE FROM product WHERE product_id = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    echo "<script>alert('Product deleted successfully'); window.location.href='product.php';</script>";
 }
 ?>

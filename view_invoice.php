@@ -52,56 +52,116 @@ $item_result = $item_stmt->get_result();
     <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 </head>
 
-<body>
-    <div class="main-content">
-        <h2>Invoice #<?= htmlspecialchars($invoice['invoice_number']) ?></h2>
-        <p><strong>Customer Name:</strong> <?= htmlspecialchars($invoice['customer_name']) ?></p>
-        <p><strong>Mobile:</strong> <?= htmlspecialchars($invoice['mobile']) ?></p>
-        <p><strong>Total Amount:</strong> ₹<?= number_format($invoice['total_amount'], 2) ?></p>
+<body class="bg-light">
 
-        <h4>Items</h4>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                while ($row = $item_result->fetch_assoc()):
-                    $total = $row['price'] * $row['quantity'];
-                    ?>
-                    <tr>
-                        <td><?= htmlspecialchars($row['product_name']) ?></td>
-                        <td><?= $row['quantity'] ?></td>
-                        <td>₹<?= number_format($row['price'], 2) ?></td>
-                        <td>₹<?= number_format($total, 2) ?></td>
-                    </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
+    <div class="container py-5">
 
-        <a href="dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
+        <div class="card shadow-lg border-0 rounded-4 mb-4">
+            <div class="card-body p-5">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="text-primary fw-bold mb-1">
+                            <i class="fas fa-file-invoice me-2"></i>Invoice
+                        </h2>
+                        <p class="text-muted mb-0">#<?= htmlspecialchars($invoice['invoice_number']) ?></p>
+                    </div>
+                    <div>
+                        <button onclick="window.print()" class="btn btn-outline-primary">
+                            <i class="fas fa-print me-1"></i> Print
+                        </button>
+                        <a href="dashboard.php" class="btn btn-secondary ms-2">
+                            <i class="fas fa-arrow-left me-1"></i> Back
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Customer Info -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6 class="fw-bold text-secondary">Customer Information</h6>
+                        <p class="mb-1"><strong>Name:</strong> <?= htmlspecialchars($invoice['customer_name']) ?></p>
+                        <p class="mb-1"><strong>Mobile:</strong> <?= htmlspecialchars($invoice['mobile']) ?></p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <h6 class="fw-bold text-secondary">Invoice Details</h6>
+                        <p class="mb-1"><strong>Date:</strong> <?= date('d M Y', strtotime($invoice['created_at'] ?? 'now')) ?></p>
+                        <p class="mb-1"><strong>Total:</strong> ₹<?= number_format($invoice['total_amount'], 2) ?></p>
+                    </div>
+                </div>
+
+                <!-- Items Table -->
+                <h5 class="fw-bold text-secondary mb-3">
+                    <i class="fas fa-shopping-basket me-1"></i> Items
+                </h5>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price (₹)</th>
+                                <th>Total (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $subtotal = 0;
+                            while ($row = $item_result->fetch_assoc()):
+                                $total = $row['price'] * $row['quantity'];
+                                $subtotal += $total;
+                            ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($row['product_name']) ?></td>
+                                    <td><?= $row['quantity'] ?></td>
+                                    <td><?= number_format($row['price'], 2) ?></td>
+                                    <td class="fw-semibold text-success"><?= number_format($total, 2) ?></td>
+                                </tr>
+                            <?php endwhile; ?>
+                            <tr class="table-light fw-bold">
+                                <td colspan="3" class="text-end">Grand Total</td>
+                                <td class="text-success fs-5"><?= number_format($subtotal, 2) ?></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Footer -->
+                <div class="text-center mt-5 border-top pt-3">
+                    <p class="text-muted small mb-0">
+                        Thank you for your purchase!
+                    </p>
+                    <p class="text-muted small mb-0">
+                        © <?= date('Y') ?> Inventory Management System
+                    </p>
+                </div>
+            </div>
+        </div>
+
     </div>
-        <script src="vendor/jquery/jquery.min.js"></script>
+
+    <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
 
-    <!-- Page level plugins -->
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <!-- Print Optimization -->
+    <style>
+        @media print {
+            body {
+                background: #fff !important;
+            }
+            .btn, .navbar, a[href] {
+                display: none !important;
+            }
+            .card {
+                box-shadow: none !important;
+                border: none !important;
+            }
+        }
+    </style>
 
-    <!-- Page level custom scripts -->
-    <script src="js/demo/datatables-demo.js"></script>
-    <script src="js/bootstrap.js"></script>
 </body>
+
 
 </html>

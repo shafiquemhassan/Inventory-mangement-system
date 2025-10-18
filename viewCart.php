@@ -74,55 +74,73 @@ $cart = $conn->query("SELECT c.*, p.product_name, p.price FROM cart_items c JOIN
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
+                 <!-- Begin Page Content -->
+<div class="container-fluid px-4 py-4">
 
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">View Cart</h1>
-                    </div>
+    <!-- Page Heading -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 text-primary fw-bold mb-0">
+            <i class="fas fa-shopping-cart me-2"></i> Your Cart
+        </h1>
+        <div>
+            <a href="add_to_card.php" class="btn btn-outline-primary me-2">
+                <i class="fas fa-plus-circle me-1"></i> Add More Items
+            </a>
+            <a href="invoice.php" class="btn btn-success shadow-sm">
+                <i class="fas fa-file-invoice me-1"></i> Proceed to Invoice
+            </a>
+        </div>
+    </div>
 
-                    <!-- table -->
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>product</th>
-                                            <th>Price</th>
-                                            <th>Quantity</th>
-                                            <th>total</th>
-                                        </tr>
-                                    </thead>
-                                   <tbody>
-                                     <?php
-                $grand_total = 0;
-                while ($row = $cart->fetch_assoc()):
-                    $total = $row['price'] * $row['quantity'];
-                    $grand_total += $total;
-                    ?>
-                     <tr>
-                        <td><?= htmlspecialchars($row['product_name']) ?></td>
-                        <td><?= number_format($row['price'], 2) ?></td>
-                        <td><?= $row['quantity'] ?></td>
-                        <td><?= number_format($total, 2) ?></td>
-                    </tr>
-                <?php endwhile; ?>
-                <tr>
-                    <th colspan="3">Grand Total</th>
-                    <th><?= number_format($grand_total, 2) ?></th>
-                </tr>
-                                  </tbody>
-                                </table>
-
-                                
-        <a href="add_to_card.php" class="btn btn-primary">Add More Items</a>
-        <a href="invoice.php" class="btn btn-success">Proceed to Invoice</a>
-                            </div>
-
-                        </div>
-
-                    
+    <!-- Cart Table Card -->
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4">
+            <?php if ($cart->num_rows > 0): ?>
+                <div class="table-responsive">
+                    <table class="table align-middle table-hover text-center">
+                        <thead class="table-primary">
+                            <tr>
+                                <th scope="col"><i class="fas fa-box me-1"></i> Product</th>
+                                <th scope="col"><i class="fas fa-tag me-1"></i> Price (PKR)</th>
+                                <th scope="col"><i class="fas fa-sort-numeric-up me-1"></i> Quantity</th>
+                                <th scope="col"><i class="fas fa-calculator me-1"></i> Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $grand_total = 0;
+                            while ($row = $cart->fetch_assoc()):
+                                $total = $row['price'] * $row['quantity'];
+                                $grand_total += $total;
+                            ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($row['product_name']) ?></td>
+                                    <td><?= number_format($row['price'], 2) ?></td>
+                                    <td><?= $row['quantity'] ?></td>
+                                    <td class="fw-semibold text-success"><?= number_format($total, 2) ?></td>
+                                </tr>
+                            <?php endwhile; ?>
+                            <tr class="table-light fw-bold">
+                                <td colspan="3" class="text-end">Grand Total:</td>
+                                <td class="text-success fs-5"><?= number_format($grand_total, 2) ?></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+            <?php else: ?>
+                <div class="text-center py-5">
+                    <i class="fas fa-shopping-basket fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Your cart is empty!</h5>
+                    <a href="add_to_card.php" class="btn btn-primary mt-3">
+                        <i class="fas fa-plus me-1"></i> Add Items Now
+                    </a>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+</div>
+
             </div>
            
 

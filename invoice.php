@@ -83,61 +83,108 @@ rel="stylesheet">
 <!-- End of Topbar -->
 
 <!-- Begin Page Content -->
-<div class="container-fluid">
+<!-- Begin Page Content -->
+<div class="container-fluid px-4 py-4">
 
-<!-- Page Heading -->
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-<h1 class="h3 mb-0 text-gray-800">Brand</h1>
-</div>
-<form action="create_invoice.php" method="post">
-<div class="mb-3">
-            <label class="form-label">Invoice Number</label>
-            <input type="text" name="invoice_id" class="form-control" value="<?php echo $invoiceNumber; ?>" readonly>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Customer Name</label>
-            <input type="text" name="customer_name" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Mobile Number</label>
-            <input type="text" name="customer_mobile" class="form-control" required>
-        </div>
+    <!-- Page Heading -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 text-primary fw-bold mb-0">
+            <i class="fas fa-file-invoice me-2"></i> Generate Invoice
+        </h1>
+        <a href="viewCart.php" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Cart
+        </a>
+    </div>
 
-        <h4>Cart Items</h4>
-        <table class="table table-bordered">
-             <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
+    <!-- Invoice Form Card -->
+    <div class="card shadow-lg border-0 rounded-4 mb-4">
+        <div class="card-body p-4">
+
+            <form action="create_invoice.php" method="post" class="needs-validation" novalidate>
+
+                <!-- Invoice & Customer Info -->
+                <div class="row mb-4">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-hashtag me-1"></i> Invoice Number
+                        </label>
+                        <input type="text" name="invoice_id" value="<?php echo $invoiceNumber; ?>"
+                            class="form-control bg-light" readonly>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-user me-1"></i> Customer Name
+                        </label>
+                        <input type="text" name="customer_name" class="form-control" placeholder="Enter full name" required>
+                        <div class="invalid-feedback">Please enter customer name.</div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-phone-alt me-1"></i> Mobile Number
+                        </label>
+                        <input type="text" name="customer_mobile" class="form-control" placeholder="03XXXXXXXXX" required>
+                        <div class="invalid-feedback">Please enter mobile number.</div>
+                    </div>
+                </div>
+
+                <!-- Cart Items Section -->
+                <h5 class="fw-bold text-secondary mb-3">
+                    <i class="fas fa-shopping-bag me-1"></i> Cart Summary
+                </h5>
+                <div class="table-responsive">
+                    <table class="table align-middle table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price (PKR)</th>
+                                <th>Total (PKR)</th>
+                            </tr>
+                        </thead>
                         <tbody>
-                <?php
-                $grand_total = 0;
-                while ($item = $cart_result->fetch_assoc()):
-                    $total = $item['quantity'] * $item['price'];
-                    $grand_total += $total;
-                    ?>
-                    <tr>
-                        <td><?= htmlspecialchars($item['product_name']) ?></td>
-                        <td><?= $item['quantity'] ?></td>
-                        <td><?= $item['price'] ?></td>
-                        <td><?= $total ?></td>
-                    </tr>
-                <?php endwhile; ?>
-                <tr>
-                    <td colspan="3" class="text-end"><strong>Grand Total</strong></td>
-                    <td><strong><?= $grand_total ?></strong></td>
-                </tr>
-            </tbody>
-        </table>
-<input type="hidden" name="total_amount" value="<?= $grand_total ?>">
-        <button type="submit" class="btn btn-primary">Generate Invoice</button>
+                            <?php
+                            $grand_total = 0;
+                            while ($item = $cart_result->fetch_assoc()):
+                                $total = $item['quantity'] * $item['price'];
+                                $grand_total += $total;
+                            ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($item['product_name']) ?></td>
+                                    <td><?= $item['quantity'] ?></td>
+                                    <td><?= number_format($item['price'], 2) ?></td>
+                                    <td class="fw-semibold text-success"><?= number_format($total, 2) ?></td>
+                                </tr>
+                            <?php endwhile; ?>
+                            <tr class="table-light fw-bold">
+                                <td colspan="3" class="text-end">Grand Total</td>
+                                <td class="text-success fs-5"><?= number_format($grand_total, 2) ?></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-</form>
+                <!-- Hidden Grand Total -->
+                <input type="hidden" name="total_amount" value="<?= $grand_total ?>">
+
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-primary px-4 shadow-sm">
+                        <i class="fas fa-file-invoice-dollar me-1"></i> Generate Invoice
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
 </div>
+
+<!-- Bootstrap Form Validation Script -->
+<script>
+(() => {
+    'use strict';
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+
 </div>
 
 

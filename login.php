@@ -1,5 +1,4 @@
 <?php
-
 include 'conn.php';
 
 if (isset($_POST['login'])) {
@@ -7,123 +6,187 @@ if (isset($_POST['login'])) {
     $password = $_POST['password'];
 
     $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-
     $stmt->bind_param('s', $email);
     $stmt->execute();
-
     $result = $stmt->get_result();
 
     if ($result->num_rows === 1) {
-        $role = $result->fetch_assoc();
-
-        if (password_verify($password, $role['password'])) {
+        $user = $result->fetch_assoc();
+        if (password_verify($password, $user['password'])) {
             session_start();
-            $_SESSION['user_id'] = $role['user_id'];
-            $_SESSION['username'] = $role['username'];
-            header('Location:dashboard.php');
+            $_SESSION['user_id'] = $user['user_id'];
+            $_SESSION['username'] = $user['username'];
+            header('Location: dashboard.php');
+            exit;
         } else {
-            echo '<div class="container"><h3 class="fs-3 text-white">Incorrect password.</h3></div>';
+            $error = "Incorrect password.";
         }
     } else {
-       
-        echo '<div class="container"><h3 class="fs-3 text-white">No user found with that email.</h3></div>';
+        $error = "No user found with that email.";
     }
 
     $stmt->close();
 }
-
 $conn->close();
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>IMS-Login</title>
-
-    <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-    <!-- Custom styles for this template-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>IMS - Login</title>
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
+    <style>
+        body {
+            background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+            font-family: 'Nunito', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-left {
+            background: #f8f9fc;
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .card-left h3 {
+            font-weight: 700;
+            color: #224abe;
+        }
+
+        .card-left p {
+            color: #5a5c69;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-right {
+            background: #fff;
+            padding: 3rem;
+        }
+
+        .form-control {
+            border-radius: 0.75rem;
+            padding: 0.85rem 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #4e73df, #224abe);
+            border: none;
+            border-radius: 0.75rem;
+            padding: 0.8rem;
+            font-weight: 600;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #224abe, #1d3fbf);
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-weight: 600;
+            background: rgba(220, 53, 69, 0.1);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .register-link a {
+            color: #4e73df;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                flex-direction: column;
+            }
+
+            .card-left,
+            .card-right {
+                width: 100%;
+                padding: 2rem;
+            }
+        }
+    </style>
 </head>
 
-<body class="bg-gradient-primary">
+<body>
 
-    <div class="container">
-
-        <!-- Outer Row -->
-        <div class="row justify-content-center">
-
-            <div class="col-xl-10 col-lg-12 col-md-9">
-
-                <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-body p-0">
-                        <!-- Nested Row within Card Body -->
-                        <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image">
-                                <h3 class="m-5">Inventory Mangement System</h3>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="p-5">
-                                    <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
-                                    </div>
-                                    <form class="user" method="post">
-                                        <div class="form-group">
-                                            <input type="email" class="form-control form-control-user"
-                                                id="email" name="email" aria-describedby="emailHelp"
-                                                placeholder="Enter Email Address...">
-                                                
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password" class="form-control form-control-user"
-                                                id="password" name="password" placeholder="Password">
-                                                
-                                        </div>
-                                       
-                                        <button class="btn btn-primary btn-user btn-block" name="login">Login</button>
-                                     
-                                    </form>
-                                    <hr>
-                                   
-                                    <div class="text-center">
-                                        <a class="small" href="register.php">Create an Account!</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+    <div class="login-container">
+        <div class="card d-flex flex-row">
+            <!-- Left Panel -->
+            <div class="card-left col-lg-6">
+                <i class="fas fa-boxes fa-3x mb-3 text-primary"></i>
+                <h3>Inventory Management System</h3>
+                <p>Organize your products, track categories, and manage users efficiently.</p>
             </div>
 
-        </div>
+            <!-- Right Panel -->
+            <div class="card-right col-lg-6">
+                <h4 class="text-center mb-4 text-primary font-weight-bold">Welcome Back 👋</h4>
 
+                <?php if (isset($error)) : ?>
+                    <div class="error-message"><?php echo htmlspecialchars($error); ?></div>
+                <?php endif; ?>
+
+                <form method="post">
+                    <div class="form-group mb-3">
+                        <label for="email" class="text-muted small">Email Address</label>
+                        <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="password" class="text-muted small">Password</label>
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
+                    </div>
+
+                    <button type="submit" name="login" class="btn btn-primary w-100">Login</button>
+                </form>
+
+                <div class="register-link">
+                    <p class="mt-3">Don't have an account? <a href="register.php">Create one</a></p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
 </body>
 
 </html>
