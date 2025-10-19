@@ -148,7 +148,7 @@ if (isset($_POST['addSubgategory'])) {
               <?php
               $query = $conn->query("SELECT * FROM category ORDER BY category_name ASC");
               while ($cat = $query->fetch_assoc()) {
-                  echo '<option value="' . $cat['id'] . '">' . htmlspecialchars($cat['category_name']) . '</option>';
+                  echo '<option value="' . $cat['category_id'] . '">' . htmlspecialchars($cat['category_name']) . '</option>';
               }
               ?>
             </select>

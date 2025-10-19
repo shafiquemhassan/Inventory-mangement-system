@@ -19,13 +19,13 @@ if (isset($_POST['addProduct'])) {
         $stmt = $conn->prepare("INSERT INTO product (brand_id, subcategory_id, category_id, product_name, price, description) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("iiisds", $brand, $subcategory, $category, $product_name, $price, $description);
         if ($stmt->execute()) {
-            echo "<script>alert('✅ Product added successfully!'); window.location.href='product.php';</script>";
+            echo "<script>alert(' Product added successfully!'); window.location.href='product.php';</script>";
         } else {
-            echo "<script>alert('❌ Error: " . $stmt->error . "');</script>";
+            echo "<script>alert(' Error: " . $stmt->error . "');</script>";
         }
         $stmt->close();
     } else {
-        echo "<script>alert('⚠️ Please fill all required fields.');</script>";
+        echo "<script>alert(' Please fill all required fields.');</script>";
     }
 }
 

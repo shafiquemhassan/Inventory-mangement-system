@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 31, 2025 at 06:41 PM
+-- Generation Time: Oct 19, 2025 at 03:59 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -38,7 +38,16 @@ CREATE TABLE `brand` (
 --
 
 INSERT INTO `brand` (`brand_id`, `brand_name`, `created_at`) VALUES
-(1, 'samsung', '2025-05-28 05:50:21');
+(1, 'samsung', '2025-05-28 05:50:21'),
+(3, 'Apple', '2025-10-19 12:59:01'),
+(4, 'Nike', '2025-10-19 12:59:18'),
+(5, 'Adidas', '2025-10-19 12:59:32'),
+(6, 'Sony', '2025-10-19 12:59:46'),
+(7, 'Dell', '2025-10-19 13:00:05'),
+(8, 'LG', '2025-10-19 13:00:17'),
+(9, 'L’Oréal', '2025-10-19 13:00:32'),
+(10, 'HP', '2025-10-19 13:00:52'),
+(11, 'Nestlé', '2025-10-19 13:01:03');
 
 -- --------------------------------------------------------
 
@@ -71,7 +80,12 @@ CREATE TABLE `category` (
 --
 
 INSERT INTO `category` (`category_id`, `category_name`, `created_at`) VALUES
-(1, 'Electronics', '2025-05-28 06:01:54');
+(1, 'Electronics', '2025-05-28 06:01:54'),
+(3, 'Fashion', '2025-10-19 13:01:28'),
+(4, 'Computers', '2025-10-19 13:01:45'),
+(5, 'Home Appliances', '2025-10-19 13:01:58'),
+(6, 'Beauty', '2025-10-19 13:02:07'),
+(7, 'Food & Beverages', '2025-10-19 13:02:26');
 
 -- --------------------------------------------------------
 
@@ -91,7 +105,15 @@ CREATE TABLE `inventory` (
 --
 
 INSERT INTO `inventory` (`inventory_id`, `product_id`, `quantity`, `last_updated`) VALUES
-(1, 2, 300, '2025-05-28 10:00:19');
+(2, 3, 25, '2025-10-19 13:49:27'),
+(3, 4, 18, '2025-10-19 13:49:50'),
+(4, 2, 60, '2025-10-19 13:50:02'),
+(5, 5, 45, '2025-10-19 13:50:18'),
+(6, 6, 30, '2025-10-19 13:50:36'),
+(7, 7, 15, '2025-10-19 13:51:04'),
+(8, 8, 10, '2025-10-19 13:51:27'),
+(9, 9, 80, '2025-10-19 13:51:46'),
+(10, 10, 22, '2025-10-19 13:52:03');
 
 -- --------------------------------------------------------
 
@@ -113,7 +135,9 @@ CREATE TABLE `invoices` (
 --
 
 INSERT INTO `invoices` (`id`, `invoice_number`, `customer_name`, `mobile`, `total_amount`, `created_at`) VALUES
-(1, 'IMS-20250531-9151', 'Hassan', '3318806675', 323000.00, '2025-05-31 14:37:28');
+(1, 'IMS-20250531-9151', 'Hassan', '3318806675', 323000.00, '2025-05-31 14:37:28'),
+(2, 'IMS-20251018-5876', 'Hassan', '03318806675', 484500.00, '2025-10-18 15:41:41'),
+(3, 'IMS-20251019-2930', 'Hassan', '03318806675', 2398.00, '2025-10-19 13:56:06');
 
 -- --------------------------------------------------------
 
@@ -133,7 +157,9 @@ CREATE TABLE `invoice_items` (
 --
 
 INSERT INTO `invoice_items` (`id`, `invoice_id`, `product_id`, `quantity`) VALUES
-(1, 1, 2, 2);
+(1, 1, 2, 2),
+(2, 2, 2, 3),
+(3, 3, 3, 2);
 
 -- --------------------------------------------------------
 
@@ -157,7 +183,15 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`product_id`, `brand_id`, `subcategory_id`, `category_id`, `product_name`, `description`, `price`, `created_at`) VALUES
-(2, 1, 1, 1, 'Samsung Galaxy S21', 'Experience the power of innovation with the Samsung Galaxy S21. Featuring a sleek design, 6.2-inch Dynamic AMOLED 2X display, and a powerful Exynos 2100 (or Snapdragon 888) processor, it delivers exceptional performance for everyday multitasking and gaming. The triple-lens camera system captures stunning photos and 8K videos, while the 4000mAh battery keeps you connected all day. With 5G support, fast charging, and advanced security, the Galaxy S21 is designed for the modern user who demands speed, style, and performan', 161500.00, '2025-05-28 09:46:54');
+(2, 1, 8, 3, 'Air Max 270', 'Lightweight sneakers with Max Air cushioning and mesh upper for comfort.', 150.00, '2025-05-28 09:46:54'),
+(3, 3, 6, 1, 'iPhone 15 Pro', 'Latest Apple smartphone with A17 Pro chip, titanium body, and 48MP', 1199.00, '2025-10-19 13:18:32'),
+(4, 1, 7, 1, 'Samsung QLED 65” 4K TV', '65-inch Smart QLED TV with Quantum Processor 4K and HDR10+ support.', 999.00, '2025-10-19 13:20:14'),
+(5, 5, 9, 3, 'Ultraboost 23', 'High-performance running shoes with responsive Boost midsole technology', 180.00, '2025-10-19 13:33:45'),
+(6, 6, 10, 1, 'WH-1000XM5', 'Wireless noise-canceling headphones with 30-hour battery life and LDAC.', 399.00, '2025-10-19 13:34:45'),
+(7, 7, 11, 4, 'XPS 13 Plus', 'Ultra-thin laptop with Intel i7 processor, OLED display, and 16GB RAM.', 1399.00, '2025-10-19 13:35:36'),
+(8, 8, 12, 5, 'LG InstaView Door-in-Door', 'Smart fridge with InstaView panel and Wi-Fi connectivity.\r\n1899', 1899.00, '2025-10-19 13:37:01'),
+(9, 9, 13, 6, 'Revitalift Hyaluronic Serum', 'Anti-aging serum infused with hyaluronic acid for hydrated, plump skin.', 25.00, '2025-10-19 13:38:18'),
+(10, 10, 14, 4, 'HP LaserJet Pro MFP M428fdw', 'All-in-one monochrome laser printer with Wi-Fi and duplex printing', 429.00, '2025-10-19 13:39:05');
 
 -- --------------------------------------------------------
 
@@ -177,7 +211,17 @@ CREATE TABLE `subcategory` (
 --
 
 INSERT INTO `subcategory` (`subcategory_id`, `category_id`, `subcategory_name`, `created_at`) VALUES
-(1, 1, 'Mobile', '2025-05-28 06:21:20');
+(1, 1, 'Mobile', '2025-05-28 06:21:20'),
+(6, 1, 'Smartphones', '2025-10-19 13:12:35'),
+(7, 1, 'Televisions', '2025-10-19 13:12:56'),
+(8, 3, 'Footwear', '2025-10-19 13:13:19'),
+(9, 3, 'Sportswear', '2025-10-19 13:13:41'),
+(10, 1, 'Headphones', '2025-10-19 13:13:57'),
+(11, 4, 'Laptops', '2025-10-19 13:14:11'),
+(12, 5, 'Refrigerators', '2025-10-19 13:14:34'),
+(13, 6, 'Skincare', '2025-10-19 13:15:00'),
+(14, 4, 'Printers', '2025-10-19 13:15:15'),
+(15, 3, 'Coffee', '2025-10-19 13:15:30');
 
 -- --------------------------------------------------------
 
@@ -198,7 +242,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `created_at`) VALUES
-(1, 'Hassan97', 'hassanshafiqe97@gmail.com', '$2y$10$AkRgUNl7eQvX2DSGWDc4WOfmoRO94jx4e3J/YXsLreNx39rTD5XaO', '2025-05-28 05:27:35');
+(2, 'admin', 'admin@gmail.com', '$2y$10$fM5YPL.IxY4nL2lSE8UTuubc2.g5fI.pmQRqWc89Kv9U8ygbeY3Ei', '2025-10-18 14:54:08'),
+(3, 'user1', 'user1@gmail.com', '$2y$10$KuHi3G9V4qgbvytUeGtPj.JGlyvd6wKV5YKnpGRWwwnebtsgwulUK', '2025-10-18 17:22:59');
 
 --
 -- Indexes for dumped tables
@@ -276,55 +321,55 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `brand`
 --
 ALTER TABLE `brand`
-  MODIFY `brand_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `brand_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `inventory_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `inventory_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `invoices`
 --
 ALTER TABLE `invoices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `invoice_items`
 --
 ALTER TABLE `invoice_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `subcategory`
 --
 ALTER TABLE `subcategory`
-  MODIFY `subcategory_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `subcategory_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables

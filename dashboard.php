@@ -111,7 +111,7 @@ include 'conn.php';
                         $totalProducts = $conn->query("SELECT COUNT(*) AS total FROM product")->fetch_assoc()['total'];
                         $totalCategories = $conn->query("SELECT COUNT(*) AS total FROM category")->fetch_assoc()['total'];
                         $totalBrands = $conn->query("SELECT COUNT(*) AS total FROM brand")->fetch_assoc()['total'];
-                        $totalUsers = $conn->query("SELECT COUNT(*) AS total FROM users")->fetch_assoc()['total'];
+                        $totalInventory = $conn->query("SELECT COUNT(*) AS total FROM inventory")->fetch_assoc()['total'];
                         ?>
                         <div class="col-md-3 mb-4">
                             <div class="card stat-card shadow-sm p-3">
@@ -133,8 +133,8 @@ include 'conn.php';
                         </div>
                         <div class="col-md-3 mb-4">
                             <div class="card stat-card shadow-sm p-3">
-                                <div class="stat-title">Registered Users</div>
-                                <div class="stat-value"><?php echo $totalUsers; ?></div>
+                                <div class="stat-title">Inventory</div>
+                                <div class="stat-value"><?php echo $totalInventory; ?></div>
                             </div>
                         </div>
                     </div>

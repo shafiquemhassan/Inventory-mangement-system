@@ -20,7 +20,7 @@ if (isset($_GET['category_id']) && is_numeric($_GET['category_id'])) {
 
     if ($count > 0) {
         echo "<script>
-                alert('❌ Cannot delete this category because it is linked to one or more products.');
+                alert(' Cannot delete this category because it is linked to one or more products.');
                 window.location.href = 'gategory.php';
               </script>";
         exit;
@@ -32,12 +32,12 @@ if (isset($_GET['category_id']) && is_numeric($_GET['category_id'])) {
 
     if ($stmt->execute()) {
         echo "<script>
-                alert('✅ Category deleted successfully.');
+                alert(' Category deleted successfully.');
                 window.location.href = 'gategory.php';
               </script>";
     } else {
         echo "<script>
-                alert('❌ Error deleting category.');
+                alert(' Error deleting category.');
                 window.location.href = 'gategory.php';
               </script>";
     }
